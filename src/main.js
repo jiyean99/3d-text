@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-
+import typeface from 'three/examples/fonts/gentilis_bold.typeface.json' //기본제공 typeface 폰트 사용방법
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 window.addEventListener('load', function () {
   init();
 });
@@ -23,6 +24,21 @@ function init() {
   );
 
   camera.position.z = 5;
+
+  /** Font */
+  // const font = fontLoader.parse(typeface); //기본제공 typeface 폰트 사용방법
+
+  const fontLoader = new FontLoader();
+
+  fontLoader.load(
+    './asset/fonts/The Jamsil 3 Regular_Regular.json',
+    font => {
+      console.log('load', font)
+    },
+    event => {
+      console.log('progress', event)
+    },
+  )
 
   render();
 
