@@ -40,7 +40,7 @@ async function init() {
   const font = await fontLoader.loadAsync('./asset/fonts/The Jamsil 3 Regular_Regular.json')
 
   /** Text */
-  const textGeometry = new TextGeometry('Three.js interactive web', {
+  const textGeometry = new TextGeometry("Welcome to eazy's Blog", {
     font,
     size: 0.5,
     height: 0.1,
@@ -97,11 +97,14 @@ async function init() {
   spotLight.position.set(0, 0, 3)
   spotLight.target.position.set(0, 0, -3)
 
+  window.addEventListener('mousemove', event => {
+    const x = (event.clientX / window.innerWidth - 0.5) * 5
+    const y = (event.clientY / window.innerHeight - 0.5) * 5
+
+    spotLight.target.position.set(x, -y, -3)
+  })
 
   scene.add(spotLight, spotLight.target)
-
-  const spotLightHelper = new THREE.SpotLightHelper(spotLight)
-  scene.add(spotLightHelper)
 
   const spotLightFolder = gui.addFolder('SpotLight')
 
@@ -152,8 +155,6 @@ async function init() {
 
   function render() {
     renderer.render(scene, camera)
-
-    spotLightHelper.update()
 
     requestAnimationFrame(render)
   }
