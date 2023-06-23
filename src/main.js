@@ -29,7 +29,7 @@ async function init() {
     500,
   )
 
-  camera.position.z = 5
+  camera.position.set(0, 1, 5)
 
   /** OrbitControls */
   new OrbitControls(camera, renderer.domElement)
@@ -40,7 +40,7 @@ async function init() {
   const font = await fontLoader.loadAsync('./asset/fonts/The Jamsil 3 Regular_Regular.json')
 
   /** Text */
-  const textGeometry = new TextGeometry('안녕, 친구들', {
+  const textGeometry = new TextGeometry('Three.js interactive web', {
     font,
     size: 0.5,
     height: 0.1,
@@ -74,27 +74,86 @@ async function init() {
   const textTexture = textureLoader.load('https://images.unsplash.com/photo-1603847734787-9e8a3f3e9d60?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80')
 
   textMaterial.map = textTexture
+
+  /** Plane */
+  const planeGeometry = new THREE.PlaneGeometry(2000, 2000)
+  const planeMeterial = new THREE.MeshPhongMaterial({ color: 0x000000 })
+
+  const plane = new THREE.Mesh(planeGeometry, planeMeterial)
+
+  plane.position.z = -10
+
+  scene.add(plane)
+
+
   /** AnbientLight */
-  const ambientLight = new THREE.AmbientLight(0xffffff, 1)
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.2)
 
   scene.add(ambientLight)
 
+  /** spotLight */
+  const spotLight = new THREE.SpotLight(0xffffff, 2.5, 30, Math.PI * 0.15, 0.2, 0.5)
+
+  spotLight.position.set(0, 0, 3)
+  spotLight.target.position.set(0, 0, -3)
+
+
+  scene.add(spotLight, spotLight.target)
+
+  const spotLightHelper = new THREE.SpotLightHelper(spotLight)
+  scene.add(spotLightHelper)
+
+  const spotLightFolder = gui.addFolder('SpotLight')
+
+  spotLightFolder
+    .add(spotLight, 'angle')
+    .min(0)
+    .max(Math.PI / 2)
+    .step(0.01)
+
+  spotLightFolder
+    .add(spotLight.position, 'z')
+    .min(1)
+    .max(10)
+    .step(0.01)
+    .name('position.z')
+
+  spotLightFolder
+    .add(spotLight, 'distance')
+    .min(1)
+    .max(30)
+    .step(0.01)
+
+  spotLightFolder
+    .add(spotLight, 'decay')
+    .min(1)
+    .max(10)
+    .step(0.01)
+
+  spotLightFolder
+    .add(spotLight, 'penumbra')
+    .min(0)
+    .max(1)
+    .step(0.01)
+
   /** PointLight */
-  const pointLight = new THREE.PointLight(0xffffff, 0.5)
-  pointLight.position.set(3, 0, 2)
-
-  scene.add(pointLight)
-
-  gui
-    .add(pointLight.position,'x')
-    .min(-3)
-    .max(3)
-    .step(0.1);
+  // const pointLight = new THREE.PointLight(0xffffff, 0.5)
+  // pointLight.position.set(3, 0, 2)
+  //
+  // scene.add(pointLight)
+  //
+  // gui
+  //   .add(pointLight.position,'x')
+  //   .min(-3)
+  //   .max(3)
+  //   .step(0.1);
 
   render()
 
   function render() {
     renderer.render(scene, camera)
+
+    spotLightHelper.update()
 
     requestAnimationFrame(render)
   }
