@@ -16,6 +16,8 @@ async function init() {
     antialias: true,
   })
 
+  renderer.shadowMap.enabled = true
+
   renderer.setSize(window.innerWidth, window.innerHeight)
 
   document.body.appendChild(renderer.domElement)
@@ -40,7 +42,7 @@ async function init() {
   const font = await fontLoader.loadAsync('./asset/fonts/The Jamsil 3 Regular_Regular.json')
 
   /** Text */
-  const textGeometry = new TextGeometry("Welcome to eazy's Blog", {
+  const textGeometry = new TextGeometry('Welcome to eazy\'s Blog', {
     font,
     size: 0.5,
     height: 0.1,
@@ -54,6 +56,7 @@ async function init() {
 
   const text = new THREE.Mesh(textGeometry, textMaterial)
 
+  text.castShadow = true
 
   // 바운딩박스로 가운데 정렬하기 -> 단순 가운데 정렬일때는 center함수를 사용하는것이 더 이득이다
   // textGeometry.computeBoundingBox()
@@ -82,6 +85,7 @@ async function init() {
   const plane = new THREE.Mesh(planeGeometry, planeMeterial)
 
   plane.position.z = -10
+  plane.receiveShadow = true
 
   scene.add(plane)
 
@@ -93,6 +97,11 @@ async function init() {
 
   /** spotLight */
   const spotLight = new THREE.SpotLight(0xffffff, 2.5, 30, Math.PI * 0.15, 0.2, 0.5)
+
+  spotLight.castShadow = true
+  spotLight.shadow.mapSize.width = 1024
+  spotLight.shadow.mapSize.height = 1024
+  spotLight.shadow.radius = 10
 
   spotLight.position.set(0, 0, 3)
   spotLight.target.position.set(0, 0, -3)
@@ -138,6 +147,13 @@ async function init() {
     .min(0)
     .max(1)
     .step(0.01)
+
+  spotLightFolder
+    .add(spotLight.shadow, 'radius')
+    .min(1)
+    .max(20)
+    .step(0.01)
+
 
   /** PointLight */
   // const pointLight = new THREE.PointLight(0xffffff, 0.5)
