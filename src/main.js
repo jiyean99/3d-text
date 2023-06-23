@@ -44,11 +44,27 @@ async function init() {
     font,
     size: 0.5,
     height: 0.1,
+    bevelEnabled: true,
+    bevelSegment: 5,
+    bevelSize: 0.02,
+    bevelThickness: 0.02,
   })
 
   const textMaterial = new THREE.MeshPhongMaterial({ color: 0x00c896 })
 
   const text = new THREE.Mesh(textGeometry, textMaterial)
+
+
+  // 바운딩박스로 가운데 정렬하기 -> 단순 가운데 정렬일때는 center함수를 사용하는것이 더 이득이다
+  // textGeometry.computeBoundingBox()
+  //
+  // textGeometry.translate(
+  //   -(textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x) * 0.5,
+  //   -(textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y) * 0.5,
+  //   -(textGeometry.boundingBox.max.z - textGeometry.boundingBox.min.z) * 0.5,
+  // )
+
+  textGeometry.center()
 
   scene.add(text)
 
@@ -59,10 +75,9 @@ async function init() {
 
   /** PointLight */
   const pointLight = new THREE.PointLight(0xffffff, 0.5)
-  const pointLightHelper = new THREE.PointLightHelper(pointLight, 0.5)
   pointLight.position.set(3, 0, 2)
 
-  scene.add(pointLight, pointLightHelper)
+  scene.add(pointLight)
 
   gui
     .add(pointLight.position,'x')
