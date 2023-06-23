@@ -50,7 +50,7 @@ async function init() {
     bevelThickness: 0.02,
   })
 
-  const textMaterial = new THREE.MeshPhongMaterial({ color: 0x00c896 })
+  const textMaterial = new THREE.MeshPhongMaterial()
 
   const text = new THREE.Mesh(textGeometry, textMaterial)
 
@@ -68,6 +68,12 @@ async function init() {
 
   scene.add(text)
 
+  /** Texture */
+  const textureLoader = new THREE.TextureLoader()
+
+  const textTexture = textureLoader.load('https://images.unsplash.com/photo-1603847734787-9e8a3f3e9d60?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80')
+
+  textMaterial.map = textTexture
   /** AnbientLight */
   const ambientLight = new THREE.AmbientLight(0xffffff, 1)
 
