@@ -3,6 +3,9 @@ import * as THREE from 'three'
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader'
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
 import GUI from 'lil-gui'
 
 window.addEventListener('load', function() {
@@ -74,7 +77,7 @@ async function init() {
   /** Texture */
   const textureLoader = new THREE.TextureLoader()
 
-  const textTexture = textureLoader.load('https://images.unsplash.com/photo-1603847734787-9e8a3f3e9d60?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80')
+  const textTexture = textureLoader.load('https://images.unsplash.com/photo-1586012556194-38bdc1b9ab7d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80')
 
   textMaterial.map = textTexture
 
@@ -106,14 +109,18 @@ async function init() {
   spotLight.position.set(0, 0, 3)
   spotLight.target.position.set(0, 0, -3)
 
+  const spotLightTexture = textureLoader.load('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80')
+
+  spotLight.map = spotLightTexture
+
+  scene.add(spotLight, spotLight.target)
+
   window.addEventListener('mousemove', event => {
     const x = (event.clientX / window.innerWidth - 0.5) * 5
     const y = (event.clientY / window.innerHeight - 0.5) * 5
 
     spotLight.target.position.set(x, -y, -3)
   })
-
-  scene.add(spotLight, spotLight.target)
 
   const spotLightFolder = gui.addFolder('SpotLight')
 
@@ -167,10 +174,42 @@ async function init() {
   //   .max(3)
   //   .step(0.1);
 
+  /** Effects */
+  const composer = new EffectComposer(renderer)
+
+  const renderPass = new RenderPass(scene, camera)
+
+  composer.addPass(renderPass)
+
+  const unrealBllomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.2, 1, 0 )
+
+  composer.addPass(unrealBllomPass)
+
+  const unrealBloomPassFolder = gui.addFolder('unrealBllomPass')
+
+  unrealBloomPassFolder
+    .add(unrealBllomPass, 'strength')
+    .min(0)
+    .max(3)
+    .step(0.3)
+
+  unrealBloomPassFolder
+    .add(unrealBllomPass, 'radius')
+    .min(0)
+    .max(3)
+    .step(0.3)
+
+  unrealBloomPassFolder
+    .add(unrealBllomPass, 'threshold')
+    .min(0)
+    .max(3)
+    .step(0.3)
+
   render()
 
   function render() {
-    renderer.render(scene, camera)
+    // renderer.render(scene, camera)
+    composer.render()
 
     requestAnimationFrame(render)
   }
