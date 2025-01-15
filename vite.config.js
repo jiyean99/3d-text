@@ -5,4 +5,5 @@ export default {
     outDir: '../dist',
     emptyOutDir: true,
   },
+  base: '/3d-text',
 }
