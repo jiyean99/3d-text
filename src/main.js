@@ -42,10 +42,10 @@ async function init() {
   /** Font */
   const fontLoader = new FontLoader()
 
-  const font = await fontLoader.loadAsync('./asset/fonts/The_Jamsil_3_Regular_Regular.json')
+  const font = await fontLoader.loadAsync('./asset/fonts/Yesteryear_Regular.json')
 
   /** Text */
-  const textGeometry = new TextGeometry('Welcome to eazy\'s Blog', {
+  const textGeometry = new TextGeometry('Welcome to Eazy\'s Blog', {
     font,
     size: 0.5,
     height: 0.1,
