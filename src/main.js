@@ -42,7 +42,7 @@ async function init() {
   /** Font */
   const fontLoader = new FontLoader()
 
-  const font = await fontLoader.loadAsync('./asset/fonts/The Jamsil 3 Regular_Regular.json')
+  const font = await fontLoader.loadAsync('/3d-text/asset/fonts/The Jamsil 3 Regular_Regular.json')
 
   /** Text */
   const textGeometry = new TextGeometry('Welcome to eazy\'s Blog', {
