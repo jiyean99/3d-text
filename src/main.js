@@ -42,7 +42,7 @@ async function init() {
   /** Font */
   const fontLoader = new FontLoader()
 
-  const font = await fontLoader.loadAsync('./asset/fonts/Yesteryear_Regular.json')
+  const font = await fontLoader.loadAsync('/asset/fonts/Yesteryear_Regular.json');
 
   /** Text */
   const textGeometry = new TextGeometry('Welcome to Eazy\'s Blog', {
